@@ -1,5 +1,5 @@
 // Arquivo: routes/pdfRoutes.js
-// Versão final consolidando a V1 (ferramentas) e a V2 (editor)
+// Versão final consolidando a V1 (ferramentas) e a V2 (editor com upload)
 
 const express = require('express');
 const router = express.Router();
@@ -38,7 +38,8 @@ const documentsDir = path.join(__dirname, '..', 'documents');
 fs.mkdirSync(uploadDir, { recursive: true });
 fs.mkdirSync(documentsDir, { recursive: true });
 
-const storage = multer.diskStorage({
+// Multer para uploads de sessão (tarefas)
+const sessionUploadStorage = multer.diskStorage({
     destination: (req, file, cb) => {
         const sessionPath = path.join(uploadDir, req.params.sessionId);
         fs.mkdirSync(sessionPath, { recursive: true });
@@ -46,7 +47,21 @@ const storage = multer.diskStorage({
     },
     filename: (req, file, cb) => cb(null, file.originalname)
 });
-const upload = multer({ storage: storage });
+const sessionUpload = multer({ storage: sessionUploadStorage });
+
+// Multer para uploads de edição (documentos permanentes)
+const documentStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, documentsDir);
+    },
+    filename: (req, file, cb) => {
+        // Para evitar sobreescrever arquivos, adicionamos um timestamp ao nome
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, `${uniqueSuffix}-${file.originalname}`);
+    }
+});
+const uploadDocument = multer({ storage: documentStorage });
+
 const jobs = new Map();
 
 // =======================================================
@@ -64,7 +79,7 @@ router.post('/session/create', (req, res) => {
     res.status(201).json({ sessionId });
 });
 
-router.post('/session/upload/:sessionId', upload.single('file'), (req, res) => {
+router.post('/session/upload/:sessionId', sessionUpload.single('file'), (req, res) => {
     if (!req.file) return res.status(400).json({ error: 'Nenhum arquivo enviado.' });
     res.status(200).json({ fileId: req.file.filename });
 });
@@ -114,11 +129,22 @@ router.post('/pdf-para-docx', multer({ storage: multer.memoryStorage() }).single
 
 
 // --- ROTAS PARA O EDITOR V2 (WOPI INTEGRATION) ---
+
+// Rota para upload de arquivos para o editor
+router.post('/upload-for-editing', uploadDocument.single('document'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ error: 'Nenhum arquivo enviado.' });
+    }
+    // Retorna a URL do editor para o arquivo que acabou de ser salvo
+    res.status(200).json({
+        editorUrl: `/editor/${req.file.filename}`
+    });
+});
+
+// Rota para renderizar a página do editor
 router.get('/editor/:fileName', (req, res) => {
     const { fileName } = req.params;
-    // URL que o Collabora usará para se comunicar de volta com nosso servidor
     const wopiClientUrl = `${process.env.APP_PUBLIC_URL}/wopi/files/${fileName}`;
-    // Token de acesso (em um sistema real, seria gerado por usuário e sessão)
     const accessToken = 'token_para_teste_seguro';
 
     res.render('editor', { 
@@ -133,7 +159,17 @@ router.get('/wopi/files/:fileName', (req, res) => {
     const { fileName } = req.params;
     const filePath = path.join(documentsDir, fileName);
 
-    if (fs.existsSync(filePath)) {
+    // Se o arquivo não existir (ex: 'novo-documento.docx'), cria a partir de um template.
+    if (!fs.existsSync(filePath)) {
+        const templatePath = path.join(__dirname, '..', 'template-vazio.docx');
+        if (fs.existsSync(templatePath)) {
+            fs.copyFileSync(templatePath, filePath);
+        } else {
+            fs.writeFileSync(filePath, ''); 
+        }
+    }
+
+    try {
         const stats = fs.statSync(filePath);
         res.json({
             BaseFileName: fileName,
@@ -144,8 +180,8 @@ router.get('/wopi/files/:fileName', (req, res) => {
             UserCanWrite: true,
             SupportsUpdate: true,
         });
-    } else {
-        res.status(404).send('Arquivo não encontrado');
+    } catch (error) {
+         res.status(404).send('Arquivo não encontrado');
     }
 });
 
@@ -216,7 +252,7 @@ async function processJob(sessionId, tool, files) {
 
             case 'pdf-para-pdfa':
                 outputFileName = baseFileName.replace(/\.pdf$/i, `_pdfa_${sessionId}.pdf`);
-                const gsDefPath = '/usr/share/ghostscript/9.55.0/lib/PDFA_def.ps'; // Confirme este caminho se houver erro
+                const gsDefPath = '/usr/share/ghostscript/9.55.0/lib/PDFA_def.ps';
                 await runExec(`gs -dPDFA=2 -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sColorConversionStrategy=UseDeviceIndependentColor -sOutputFile=${outputFile} ${gsDefPath} ${inputFile}`);
                 fs.renameSync(outputFile, path.join(sessionPath, outputFileName));
                 break;
@@ -261,5 +297,6 @@ async function processJob(sessionId, tool, files) {
         jobs.set(sessionId, { status: 'error', message: `Falha em '${tool}'. Verifique o arquivo e tente novamente.` });
     }
 }
+
 
 module.exports = router;

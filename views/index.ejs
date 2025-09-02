@@ -2,6 +2,30 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 
+                <section id="editor-card" class="bg-white p-6 rounded-xl shadow-md space-y-4 md:col-span-2 lg:col-span-4 border-2 border-blue-500">
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                        <h2 class="text-xl font-semibold text-gray-700">Editor de Documentos (V2)</h2>
+                    </div>
+                    <p class="text-gray-500 text-sm">Abra e edite arquivos DOCX, XLSX, PPTX e anote em PDFs diretamente no navegador. Comece um documento novo ou carregue um existente.</p>
+                    <div class="flex items-center justify-center space-x-4 pt-2">
+                        <label for="editor-upload-input" class="cursor-pointer bg-green-500 text-white font-bold py-2 px-8 rounded-lg hover:bg-green-600 transition-colors">
+                            Carregar e Editar
+                        </label>
+                        <input type="file" id="editor-upload-input" class="hidden" accept=".pdf,.docx,.xlsx,.pptx,.ods,.odt,.odp">
+                        
+                        <a href="/editor/novo-documento.docx" class="bg-blue-500 text-white font-bold py-2 px-8 rounded-lg hover:bg-blue-600 transition-colors">
+                            Criar Novo Documento
+                        </a>
+                    </div>
+                    <div id="editor-status" class="space-y-2 text-center min-h-[2.5rem]">
+                        <div class="w-full bg-gray-200 rounded-full h-2.5 hidden progress-container">
+                            <div class="bg-green-600 h-2.5 rounded-full progress-bar" style="width: 0%"></div>
+                        </div>
+                        <div class="status-text text-sm"></div>
+                    </div>
+                </section>
+
                 <section id="unir-pdf-card" class="bg-white p-6 rounded-xl shadow-md space-y-4 md:col-span-2 lg:col-span-4">
                     <div class="flex items-center space-x-3">
                         <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
@@ -149,6 +173,5 @@
                         <div class="status-text text-sm"></div>
                     </div>
                 </section>
-
             </div>
 <%- include('partials/footer'); %>

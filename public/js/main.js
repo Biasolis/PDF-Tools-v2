@@ -2,23 +2,55 @@ document.addEventListener('DOMContentLoaded', () => {
     // =================================================================================
     // FUNÇÕES DE SETUP GERAIS (Iniciam os listeners para cada card)
     // =================================================================================
-
-    // Ferramenta customizada com preview e reordenação
     setupUnirPdfTool();
-
-    // Ferramentas assíncronas de arquivo único
     setupSimpleAsyncTool('comprimir-pdf');
     setupSimpleAsyncTool('docx-para-pdf');
     setupSimpleAsyncTool('pdf-para-pdfa');
     setupSimpleAsyncTool('pdf-para-jpg');
     setupSimpleAsyncTool('separar-pdf');
-
-    // Ferramentas assíncronas de múltiplos arquivos
     setupMultiFileAsyncTool('jpg-para-pdf');
     setupMultiFileAsyncTool('png-para-pdf');
-
-    // Ferramenta síncrona (rápida)
     setupSimpleSyncTool('pdf-para-docx');
+    setupEditorUpload();
+
+    // =================================================================================
+    // LÓGICA PARA UPLOAD DO EDITOR V2
+    // =================================================================================
+    function setupEditorUpload() {
+        const editorUploadInput = document.getElementById('editor-upload-input');
+        const editorStatusEl = document.getElementById('editor-status');
+        if (!editorUploadInput) return;
+
+        editorUploadInput.addEventListener('change', async (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('document', file);
+
+            showStatus(editorStatusEl, `Enviando ${file.name}...`, 'processing');
+            editorUploadInput.disabled = true;
+
+            try {
+                const response = await fetch('/upload-for-editing', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.error || 'Falha no upload do arquivo.');
+                }
+
+                const data = await response.json();
+                window.location.href = data.editorUrl;
+
+            } catch (error) {
+                showStatus(editorStatusEl, error.message, 'error');
+                editorUploadInput.disabled = false;
+            }
+        });
+    }
 
     // =================================================================================
     // LÓGICA ESPECÍFICA DA FERRAMENTA DE UNIR PDF
@@ -163,13 +195,13 @@ document.addEventListener('DOMContentLoaded', () => {
         let sessionData = null;
         let uploadedFileIds = [];
 
-        input.addEventListener('change', async () => {
+        input.addEventListener('change', async (event) => {
             if (!sessionData) {
                 sessionData = await startNewSession(statusEl);
                 if (!sessionData) return;
             }
             
-            const files = Array.from(input.files);
+            const files = Array.from(event.target.files);
             input.disabled = true;
             button.disabled = true;
 
@@ -211,6 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 pollJobStatus(sessionData.sessionId, statusEl, button, null, input);
                 sessionData = null;
                 uploadedFileIds = [];
+                input.value = '';
             } catch (error) {
                 showStatus(statusEl, error.message, 'error');
                 button.disabled = false;
@@ -371,6 +404,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (button) button.disabled = false;
                     if (addButtonLabel) addButtonLabel.classList.remove('hidden');
                     if (input) input.disabled = false;
+                    if (input) input.value = '';
                 } else if (data.status === 'error') {
                     clearInterval(interval);
                     showStatus(statusEl, `Erro: ${data.message}`, 'error');
