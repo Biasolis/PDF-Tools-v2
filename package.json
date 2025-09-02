@@ -1,12 +1,12 @@
 {
-  "name": "ferramenta-pdf",
-  "version": "1.0.0",
-  "description": "Ferramentas de PDF para uso dentro do Consórcio Magalu",
+  "name": "PDF-Tools V2",
+  "version": "2.0.0",
+  "description": "PDF-Tools",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
-  "author": "Leonardo Solis",
+  "author": "Leonardo Biasoli",
   "license": "ISC",
   "dependencies": {
     "ejs": "^3.1.10",

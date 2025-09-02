@@ -1,0 +1,30 @@
+services:
+  # Serviço da aplicação Node.js, agora exposto na porta 81
+  pdf-tools:
+    build: .
+    container_name: pdf-tools-v2-app-test
+    ports:
+      - "81:3000" # Mapeia a porta 81 do host para a porta 3000 da aplicação
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - ./documents:/app/documents
+    shm_size: '2gb'
+    environment:
+      - NODE_ENV=development
+      - APP_PUBLIC_URL=http://172.18.130.29:81
+    restart: always
+    depends_on:
+      - collabora
+
+  # Serviço do Collabora Online
+  collabora:
+    image: collabora/code:latest
+    container_name: pdf-tools-v2-collabora-test
+    expose:
+      - "9980" # Apenas para a rede interna
+    environment:
+      - extra_params=--o:ssl.enable=false --o:ssl.termination=false --o:net.post_allow.host[0].post_allow=false
+    restart: always
+    cap_add:
+      - MKNOD

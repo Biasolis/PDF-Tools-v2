@@ -1,4 +1,5 @@
 services:
+  # Serviço da aplicação Node.js
   pdf-tools:
     build: .
     container_name: pdf-tools-v2-app
@@ -9,24 +10,31 @@ services:
     shm_size: '2gb'
     environment:
       - NODE_ENV=development
+      # [IMPORTANTE] Use o IP da sua máquina Linux na rede local
       - APP_PUBLIC_URL=http://172.18.130.29:81
     restart: always
+    networks: # Conecta a nossa rede customizada
+      - pdf-tools-net
 
+  # Serviço do Collabora Online
   collabora:
     image: collabora/code:latest
     container_name: pdf-tools-v2-collabora
     ports:
-      # --- CORREÇÃO FINAL E DEFINITIVA ---
-      # Remove o "127.0.0.1:", permitindo que a porta 9980 seja acessível
-      # pelo IP da máquina (172.18.130.29) e por outros contêineres.
+      # Mantemos a porta exposta para testes diretos
       - "9980:9980"
     environment:
+      # Esta variável diz ao Collabora para aceitar conexões vindas do seu domínio/IP
       - aliasgroup1=http://*:81
+      # Desabilita o SSL do próprio Collabora
       - extra_params=--o:ssl.enable=false --o:ssl.termination=false
     restart: always
     cap_add:
       - MKNOD
+    networks: # Conecta a nossa rede customizada
+      - pdf-tools-net
 
+  # Serviço do Nginx para o ambiente local
   nginx:
     image: nginx:stable-alpine
     container_name: pdf-tools-v2-nginx
@@ -38,3 +46,11 @@ services:
       - pdf-tools
       - collabora
     restart: always
+    networks: # Conecta a nossa rede customizada
+      - pdf-tools-net
+
+# --- CORREÇÃO APLICADA AQUI ---
+# Define uma rede customizada para garantir a comunicação entre os serviços
+networks:
+  pdf-tools-net:
+    driver: bridge
