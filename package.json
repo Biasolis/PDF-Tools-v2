@@ -1,0 +1,22 @@
+{
+  "name": "ferramenta-pdf",
+  "version": "1.0.0",
+  "description": "Ferramentas de PDF para uso dentro do Consórcio Magalu",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Leonardo Solis",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "mammoth": "^1.7.2",
+    "multer": "^1.4.5-lts.1",
+    "pdf-lib": "^1.17.1",
+    "pdf-parse": "^1.1.1",
+    "puppeteer": "^22.10.0",
+    "uuid": "^9.0.1",
+    "zip-a-folder": "^1.1.5"
+  }
+}

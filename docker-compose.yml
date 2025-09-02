@@ -1,0 +1,44 @@
+# Arquivo: docker-compose.yml (Versão 2)
+
+services:
+  # Serviço da sua aplicação Node.js (V2)
+  pdf-tools-v2:
+    build: .
+    container_name: pdf-tools-v2 # Nome explícito para V2
+    volumes:
+      - .:/app
+      - /app/node_modules
+    shm_size: '2gb'
+    environment:
+      - NODE_ENV=production
+      # [NOVO] URL pública da sua aplicação, necessária para o Collabora
+      - APP_PUBLIC_URL=https://pdf-tools.consorciomagalu.com.br
+    restart: always
+
+  # Novo serviço para o Collabora Online
+  collabora:
+    image: collabora/code:latest
+    container_name: collabora
+    ports:
+      - "9980:9980" # A porta do Collabora, usada para comunicação interna
+    environment:
+      # O domínio principal da sua aplicação (sem https://)
+      - domain=pdf-tools\\.consorciomagalu\\.com\\.br
+      # Desabilita o SSL do próprio Collabora, pois o Nginx cuidará disso
+      - extra_params=--o:ssl.enable=false
+    restart: always
+
+  # Serviço do proxy Nginx (V2)
+  nginx-v2:
+    image: nginx:stable-alpine
+    container_name: nginx-v2
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - /etc/nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - pdf-tools-v2
+      - collabora
+    restart: always

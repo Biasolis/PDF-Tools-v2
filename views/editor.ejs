@@ -1,0 +1,13 @@
+<%- include('partials/header'); %>
+
+<div class="w-full h-[85vh]">
+    <form id="collabora-form" method="post" action="" target="collabora-iframe" class="hidden">
+        <input name="access_token" value="<%- accessToken %>" type="hidden"/>
+    </form>
+    
+    <iframe id="collabora-iframe" name="collabora-iframe" class="w-full h-full border-2 rounded-xl shadow-lg"></iframe>
+</div>
+
+<script defer src="/js/editor.js"></script>
+
+<%- include('partials/footer'); %>

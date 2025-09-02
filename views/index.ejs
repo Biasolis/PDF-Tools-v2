@@ -1,0 +1,154 @@
+<%- include('partials/header'); %>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                
+                <section id="unir-pdf-card" class="bg-white p-6 rounded-xl shadow-md space-y-4 md:col-span-2 lg:col-span-4">
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                        <h2 class="text-xl font-semibold text-gray-700">Unir PDFs</h2>
+                    </div>
+                    <p class="text-gray-500 text-sm">Selecione múltiplos arquivos PDF. Arraste e solte as pré-visualizações para reordenar.</p>
+                    <div id="pdf-preview-area" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 p-4 border-2 border-dashed rounded-lg min-h-[160px]"></div>
+                    <div class="flex items-center justify-center space-x-4 pt-4">
+                        <label for="unir-pdf-input" class="cursor-pointer bg-gray-200 text-gray-700 py-2 px-6 rounded-lg hover:bg-gray-300 transition-colors">Adicionar Arquivos</label>
+                        <input type="file" id="unir-pdf-input" multiple accept=".pdf" class="hidden">
+                        <button id="unir-pdf-button" class="bg-blue-500 text-white font-bold py-2 px-8 rounded-lg hover:bg-blue-600 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed" disabled>Unir PDFs</button>
+                    </div>
+                    <div id="unir-pdf-status" class="space-y-2 text-center min-h-[2.5rem]">
+                        <div class="w-full bg-gray-200 rounded-full h-2.5 hidden progress-container">
+                            <div class="bg-blue-600 h-2.5 rounded-full progress-bar" style="width: 0%"></div>
+                        </div>
+                        <div class="status-text text-sm"></div>
+                    </div>
+                </section>
+
+                <section id="jpg-para-pdf-card" class="bg-white p-6 rounded-xl shadow-md space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <h2 class="text-xl font-semibold text-gray-700">JPG para PDF</h2>
+                    </div>
+                    <p class="text-gray-500 text-sm">Converta uma ou mais imagens JPG em um único arquivo PDF.</p>
+                    <input type="file" id="jpg-para-pdf-input" multiple accept="image/jpeg" class="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-red-50 file:text-red-700 hover:file:bg-red-100">
+                    <button id="jpg-para-pdf-button" class="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition-colors">Converter para PDF</button>
+                    <div id="jpg-para-pdf-status" class="space-y-2 text-center min-h-[2.5rem]">
+                        <div class="w-full bg-gray-200 rounded-full h-2.5 hidden progress-container">
+                            <div class="bg-red-600 h-2.5 rounded-full progress-bar" style="width: 0%"></div>
+                        </div>
+                        <div class="status-text text-sm"></div>
+                    </div>
+                </section>
+
+                <section id="png-para-pdf-card" class="bg-white p-6 rounded-xl shadow-md space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-8 h-8 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <h2 class="text-xl font-semibold text-gray-700">PNG para PDF</h2>
+                    </div>
+                    <p class="text-gray-500 text-sm">Converta uma ou mais imagens PNG em um único arquivo PDF.</p>
+                    <input type="file" id="png-para-pdf-input" multiple accept="image/png" class="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                    <button id="png-para-pdf-button" class="w-full bg-indigo-500 text-white py-2 rounded-lg hover:bg-indigo-600 transition-colors">Converter para PDF</button>
+                    <div id="png-para-pdf-status" class="space-y-2 text-center min-h-[2.5rem]">
+                        <div class="w-full bg-gray-200 rounded-full h-2.5 hidden progress-container">
+                            <div class="bg-indigo-600 h-2.5 rounded-full progress-bar" style="width: 0%"></div>
+                        </div>
+                        <div class="status-text text-sm"></div>
+                    </div>
+                </section>
+                
+                <section id="separar-pdf-card" class="bg-white p-6 rounded-xl shadow-md space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-8 h-8 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879a2 2 0 000 2.828L11.879 19m-7-7l2.879-2.879a2 2 0 012.828 0L12.121 12"></path></svg>
+                        <h2 class="text-xl font-semibold text-gray-700">Separar PDF</h2>
+                    </div>
+                    <p class="text-gray-500 text-sm">Extraia todas as páginas de um PDF em arquivos separados (em um .zip).</p>
+                    <input type="file" id="separar-pdf-input" accept=".pdf" class="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-cyan-50 file:text-cyan-700 hover:file:bg-cyan-100">
+                    <button id="separar-pdf-button" class="w-full bg-cyan-500 text-white py-2 rounded-lg hover:bg-cyan-600 transition-colors">Separar Páginas</button>
+                    <div id="separar-pdf-status" class="space-y-2 text-center min-h-[2.5rem]">
+                        <div class="w-full bg-gray-200 rounded-full h-2.5 hidden progress-container">
+                            <div class="bg-cyan-600 h-2.5 rounded-full progress-bar" style="width: 0%"></div>
+                        </div>
+                        <div class="status-text text-sm"></div>
+                    </div>
+                </section>
+                
+                <section id="pdf-para-jpg-card" class="bg-white p-6 rounded-xl shadow-md space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-8 h-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <h2 class="text-xl font-semibold text-gray-700">PDF para JPG</h2>
+                    </div>
+                    <p class="text-gray-500 text-sm">Converta cada página do PDF em imagens JPG (em um .zip).</p>
+                    <input type="file" id="pdf-para-jpg-input" accept=".pdf" class="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-yellow-50 file:text-yellow-700 hover:file:bg-yellow-100">
+                    <button id="pdf-para-jpg-button" class="w-full bg-yellow-500 text-white py-2 rounded-lg hover:bg-yellow-600 transition-colors">Converter para JPG</button>
+                    <div id="pdf-para-jpg-status" class="space-y-2 text-center min-h-[2.5rem]">
+                        <div class="w-full bg-gray-200 rounded-full h-2.5 hidden progress-container">
+                            <div class="bg-yellow-500 h-2.5 rounded-full progress-bar" style="width: 0%"></div>
+                        </div>
+                        <div class="status-text text-sm"></div>
+                    </div>
+                </section>
+
+                <section id="comprimir-pdf-card" class="bg-white p-6 rounded-xl shadow-md space-y-4">
+                    <div class="flex items-center space-x-3">
+                         <svg class="w-8 h-8 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l5-2 2 8z"></path></svg>
+                        <h2 class="text-xl font-semibold text-gray-700">Comprimir PDF</h2>
+                    </div>
+                    <p class="text-gray-500 text-sm">Reduza o tamanho do seu PDF para otimizar o compartilhamento.</p>
+                    <input type="file" id="comprimir-pdf-input" accept=".pdf" class="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100">
+                    <button id="comprimir-pdf-button" class="w-full bg-purple-500 text-white py-2 rounded-lg hover:bg-purple-600 transition-colors">Comprimir Agora</button>
+                    <div id="comprimir-pdf-status" class="space-y-2 text-center min-h-[2.5rem]">
+                        <div class="w-full bg-gray-200 rounded-full h-2.5 hidden progress-container">
+                            <div class="bg-purple-600 h-2.5 rounded-full progress-bar" style="width: 0%"></div>
+                        </div>
+                        <div class="status-text text-sm"></div>
+                    </div>
+                </section>
+
+                <section id="docx-para-pdf-card" class="bg-white p-6 rounded-xl shadow-md space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        <h2 class="text-xl font-semibold text-gray-700">DOCX para PDF</h2>
+                    </div>
+                    <p class="text-gray-500 text-sm">Converta documentos Word (.docx) para o formato PDF com alta fidelidade.</p>
+                    <input type="file" id="docx-para-pdf-input" accept=".doc,.docx" class="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
+                    <button id="docx-para-pdf-button" class="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition-colors">Converter Agora</button>
+                    <div id="docx-para-pdf-status" class="space-y-2 text-center min-h-[2.5rem]">
+                        <div class="w-full bg-gray-200 rounded-full h-2.5 hidden progress-container">
+                            <div class="bg-green-600 h-2.5 rounded-full progress-bar" style="width: 0%"></div>
+                        </div>
+                        <div class="status-text text-sm"></div>
+                    </div>
+                </section>
+                
+                <section id="pdf-para-pdfa-card" class="bg-white p-6 rounded-xl shadow-md space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-8 h-8 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.493a9 9 0 11-12.728 0 9 9 0 0112.728 0z"></path></svg>
+                        <h2 class="text-xl font-semibold text-gray-700">Converter para PDF/A</h2>
+                    </div>
+                    <p class="text-gray-500 text-sm">Converta um PDF para o formato de arquivamento PDF/A.</p>
+                    <input type="file" id="pdf-para-pdfa-input" accept=".pdf" class="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100">
+                    <button id="pdf-para-pdfa-button" class="w-full bg-teal-500 text-white py-2 rounded-lg hover:bg-teal-600 transition-colors">Converter Agora</button>
+                    <div id="pdf-para-pdfa-status" class="space-y-2 text-center min-h-[2.5rem]">
+                        <div class="w-full bg-gray-200 rounded-full h-2.5 hidden progress-container">
+                            <div class="bg-teal-600 h-2.5 rounded-full progress-bar" style="width: 0%"></div>
+                        </div>
+                        <div class="status-text text-sm"></div>
+                    </div>
+                </section>
+                
+                <section id="pdf-para-docx-card" class="bg-white p-6 rounded-xl shadow-md space-y-4">
+                    <div class="flex items-center space-x-3">
+                       <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                        <h2 class="text-xl font-semibold text-gray-700">PDF para DOCX</h2>
+                    </div>
+                    <p class="text-gray-500 text-sm">Extraia o texto de um PDF para um arquivo Word (.doc) editável.</p>
+                    <input type="file" id="pdf-para-docx-input" accept=".pdf" class="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100">
+                    <button id="pdf-para-docx-button" class="w-full bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600 transition-colors">Extrair Texto</button>
+                    <div id="pdf-para-docx-status" class="space-y-2 text-center min-h-[2.5rem]">
+                        <div class="w-full bg-gray-200 rounded-full h-2.5 hidden progress-container">
+                            <div class="bg-gray-600 h-2.5 rounded-full progress-bar" style="width: 0%"></div>
+                        </div>
+                        <div class="status-text text-sm"></div>
+                    </div>
+                </section>
+
+            </div>
+<%- include('partials/footer'); %>
